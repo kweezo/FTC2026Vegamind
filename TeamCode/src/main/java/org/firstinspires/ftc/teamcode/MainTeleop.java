@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.drivetrain.Motors;
 import org.firstinspires.ftc.teamcode.drivetrain.TankDrive;
 import org.firstinspires.ftc.teamcode.input.InputMap;
 import org.firstinspires.ftc.teamcode.input.PrimaryMap;
-import org.firstinspires.ftc.teamcode.intake.Intake;
 import org.firstinspires.ftc.teamcode.magazine.Magazine;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 
@@ -28,7 +27,7 @@ public class MainTeleop extends OpMode{
     public void init() {
         Motors motors = new Motors(hardwareMap, "rearLeft", "rearRight", "frontLeft", "frontRight");
 
-        PrimaryMap inputMap = new PrimaryMap(gamepad1);
+        inputMap = new PrimaryMap(gamepad1);
 
         drivetrain = new TankDrive(hardwareMap, motors);
     }
