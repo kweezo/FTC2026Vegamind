@@ -28,7 +28,6 @@ public class MainTeleop extends OpMode{
         Motors motors = new Motors(hardwareMap, "rearLeft", "rearRight", "frontLeft", "frontRight");
 
         inputMap = new PrimaryMap(gamepad1);
-
         drivetrain = new TankDrive(hardwareMap, motors);
     }
 

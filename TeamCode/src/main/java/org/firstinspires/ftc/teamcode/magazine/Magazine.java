@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.magazine;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.color.BallColor;
+import org.firstinspires.ftc.teamcode.color.HSV;
 import org.firstinspires.ftc.teamcode.input.PrimaryMap;
 
 public class Magazine {
@@ -15,19 +17,12 @@ public class Magazine {
     int gateOpenPos = 1;
 
     final int[] magazineBallPositions = {0, 1, 2}; //TODO replace
+    ColorSensor[] sensors = new ColorSensor[3];
 
-    public Magazine(Servo magazineServo, Servo gateServo) {
+    public Magazine(Servo magazineServo, Servo gateServo, ColorSensor[] sensors) {
         this.magazineServo = magazineServo;
         this.gateServo = gateServo;
-    }
-
-    public void run(PrimaryMap map) {
-        updateGate(); //TODO it being 1 iteration behind shouldnt cause problems right?
-
-        int index = map.getBallIndex();
-        if(index == -1 || currIndex == index) return;
-
-        rotateToBall(index);
+        this.sensors = sensors;
     }
 
     public void rotateToBall(int index) {
@@ -35,9 +30,20 @@ public class Magazine {
         currIndex = -1;
     }
 
-    void updateGate() {
-        if (atTargetBall()) magazineServo.setPosition(gateOpenPos);
-        else magazineServo.setPosition(gateClosePos);
+    /// returns true if magazine is at the correct position
+    /// in which case the gate will open, otherwise it wont
+    public boolean openGate() {
+        if (!atTargetBall()) {
+            return false;
+        }
+
+        magazineServo.setPosition(gateOpenPos);
+
+        return true;
+    }
+
+    public void closeGate() {
+        magazineServo.setPosition(gateClosePos);
     }
 
 
@@ -45,5 +51,18 @@ public class Magazine {
         if(currIndex == -1) return false;
 
         return magazineServo.getPosition() == magazineBallPositions[currIndex]; // TODO add a margin for error?
+    }
+
+    public BallColor getBallAtSlot(int index) {
+        int r = sensors[index].red();
+        int g = sensors[index].green();
+        int b = sensors[index].blue();
+
+        HSV color = new HSV(r, g, b);
+
+        if(color.v() < 0.3) return BallColor.NONE;
+
+        if (color.h() < 180) return BallColor.GREEN; //good enough-ish
+        else return BallColor.PURPLE;
     }
 }

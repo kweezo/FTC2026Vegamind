@@ -14,6 +14,14 @@ public class Shooter {
        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
+    public void windup() {
+        motor.setPower(1.0f);
+    }
+
+    public void winddown() {
+        motor.setPower(0.0f);
+    }
+
     public void shoot(Gamepad gamepad) {
         motor.setPower(gamepad.left_trigger - gamepad.right_trigger);
 
