@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
-apply from: '../build.dependencies.gradle'
 
 android {
 
@@ -18,8 +17,8 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    compileSdk 34
 
+    compileSdkVersion 30
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
