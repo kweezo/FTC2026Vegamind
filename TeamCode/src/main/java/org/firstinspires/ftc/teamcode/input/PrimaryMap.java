@@ -44,5 +44,7 @@ public class PrimaryMap extends InputMap{
         // if there are multiple simultaneous presses we dont want
         // ambiguity so we dont do jack until the user finally decides
         // what to press
+
+        return selectCount;
     }
 }
