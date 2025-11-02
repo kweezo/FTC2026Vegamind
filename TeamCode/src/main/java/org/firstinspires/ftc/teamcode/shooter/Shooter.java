@@ -18,6 +18,10 @@ public class Shooter {
         motor.setPower(1.0f);
     }
 
+    public boolean isWound() {
+        return motor.getPower() != 0.0;
+    }
+
     public void winddown() {
         motor.setPower(0.0f);
     }
