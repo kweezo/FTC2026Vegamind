@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivetrain.Motors;
 import org.firstinspires.ftc.teamcode.drivetrain.TankDrive;
-import org.firstinspires.ftc.teamcode.input.InputMap;
 import org.firstinspires.ftc.teamcode.input.PrimaryMap;
 import org.firstinspires.ftc.teamcode.magazine.Magazine;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
@@ -27,13 +25,28 @@ public class MainTeleop extends OpMode{
     public void init() {
         Motors motors = new Motors(hardwareMap, "rearLeft", "rearRight", "frontLeft", "frontRight");
 
+        ColorSensor[] colorSensors = {hardwareMap.get(ColorSensor.class, "color1"),
+                                      hardwareMap.get(ColorSensor.class, "color2"),
+                                      hardwareMap.get(ColorSensor.class, "color3")};
+
         inputMap = new PrimaryMap(gamepad1);
         drivetrain = new TankDrive(hardwareMap, motors);
+        shooter = new Shooter(hardwareMap.get(DcMotor.class, "shooter"));
+        magazine = new Magazine(hardwareMap.get(Servo.class, "magazineServo"), hardwareMap.get(Servo.class, "gateServo"),
+                colorSensors);
     }
 
     @Override
     public void loop() {
         drivetrain.run(inputMap);
+
+        magazine.rotateToBall(inputMap.getBallIndex());
+
+        if(inputMap.runShooter()) shooter.windup();
+        else shooter.winddown();
+
+        if(inputMap.openGate()) magazine.openGate();
+        else magazine.closeGate();
     }
 }
 
